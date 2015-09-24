@@ -1,6 +1,6 @@
 public struct Event<T> {
-    let oldValue: T
-    let newValue: T
+    public let oldValue: T
+    public let newValue: T
 }
 
 public class Subscription<T>: Hashable {
