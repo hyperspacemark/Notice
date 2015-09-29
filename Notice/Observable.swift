@@ -13,10 +13,9 @@ public struct Observable<T> {
 
     public var value: T {
         didSet {
-            dispatch_sync(eventQueue) { () -> Void in
-                let event = Event(oldValue: oldValue, newValue: self.value)
-                self.subscribers.send(event)
-                self.onceSubscribers.send(event)
+            dispatch_sync(eventQueue) {
+                self.subscribers.send(self.value)
+                self.onceSubscribers.send(self.value)
             }
         }
     }
@@ -36,6 +35,7 @@ public struct Observable<T> {
 
     public mutating func subscribe(handler: SubscriptionType.EventHandler) -> SubscriptionType {
         let subscription = Subscription(handler: handler)
+        subscription.handler(value)
         subscribers.add(subscription)
         return subscription
     }

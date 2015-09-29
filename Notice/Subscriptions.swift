@@ -5,7 +5,7 @@ protocol SubscriptionsType {
 
     mutating func add(subscription: Subscription<ValueType>)
     mutating func remove(subscription: Subscription<ValueType>)
-    func send(event: Event<ValueType>)
+    func send(value: ValueType)
 }
 
 extension SubscriptionsType {
@@ -23,8 +23,8 @@ class Subscriptions<T>: SubscriptionsType {
 
     var subscriptions = Set<Subscription<ValueType>>()
 
-    func send(event: Event<ValueType>) {
-        subscriptions.forEach { $0.handler(event) }
+    func send(value: ValueType) {
+        subscriptions.forEach { $0.handler(value) }
     }
 }
 
@@ -33,8 +33,8 @@ class OnceSubscriptions<T>: SubscriptionsType {
 
     var subscriptions = Set<Subscription<ValueType>>()
 
-    func send(event: Event<ValueType>) {
-        subscriptions.forEach { $0.handler(event) }
+    func send(value: ValueType) {
+        subscriptions.forEach { $0.handler(value) }
         subscriptions.removeAll()
     }
 }

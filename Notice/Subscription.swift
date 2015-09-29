@@ -1,10 +1,5 @@
-public struct Event<T> {
-    public let oldValue: T
-    public let newValue: T
-}
-
 public class Subscription<T>: Hashable {
-    public typealias EventHandler = (Event<T>) -> Void
+    public typealias EventHandler = T -> Void
 
     let handler: EventHandler
     private let UUID = NSUUID().UUIDString
