@@ -1,15 +1,19 @@
 public class Subscription<T>: Hashable {
     public typealias EventHandler = T -> Void
 
-    let handler: EventHandler
+    weak var observer: Observer<T>?
     private let UUID = NSUUID().UUIDString
 
     init(handler: EventHandler) {
-        self.handler = handler
+        self.observer = Observer(handler: handler)
     }
 
     public var hashValue: Int {
         return UUID.hashValue
+    }
+
+    func send(value: T) {
+        observer?.notify(value)
     }
 }
 

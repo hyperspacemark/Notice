@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Observable<T> {
+public class Observable<T> {
 
     // MARK: - Types
 
@@ -33,18 +33,17 @@ public struct Observable<T> {
     private var subscribers = Subscriptions<T>()
     private var onceSubscribers = OnceSubscriptions<T>()
 
-    public mutating func subscribe(handler: SubscriptionType.EventHandler) -> SubscriptionType {
+    public func subscribe(handler: SubscriptionType.EventHandler) -> SubscriptionType {
         let subscription = Subscription(handler: handler)
-        subscription.handler(value)
         subscribers.add(subscription)
         return subscription
     }
 
-    public mutating func subscribeOnce(handler: SubscriptionType.EventHandler) {
+    public func subscribeOnce(handler: SubscriptionType.EventHandler) {
         onceSubscribers.add(Subscription(handler: handler))
     }
 
-    public mutating func unsubscribe(subscriber: SubscriptionType) {
+    public func unsubscribe(subscriber: SubscriptionType) {
         subscribers.remove(subscriber)
     }
 }

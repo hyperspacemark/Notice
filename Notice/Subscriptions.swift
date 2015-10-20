@@ -24,7 +24,7 @@ class Subscriptions<T>: SubscriptionsType {
     var subscriptions = Set<Subscription<ValueType>>()
 
     func send(value: ValueType) {
-        subscriptions.forEach { $0.handler(value) }
+        subscriptions.forEach { $0.send(value) }
     }
 }
 
@@ -34,7 +34,7 @@ class OnceSubscriptions<T>: SubscriptionsType {
     var subscriptions = Set<Subscription<ValueType>>()
 
     func send(value: ValueType) {
-        subscriptions.forEach { $0.handler(value) }
+        subscriptions.forEach { $0.send(value) }
         subscriptions.removeAll()
     }
 }
