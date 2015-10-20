@@ -23,7 +23,7 @@ public struct Observable<T> {
 
     // MARK: - Initialization
 
-    public init(_ value: T) {
+    public init(initial value: T) {
         self.value = value
     }
 
