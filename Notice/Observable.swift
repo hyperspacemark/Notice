@@ -39,7 +39,7 @@ public struct Observable<T> {
 
     private var subscribers = Subscriptions<T>()
 
-    public mutating func subscribe(options: SubscriptionOptions = [.New], _ handler: SubscriptionType.EventHandler) -> SubscriptionType {
+    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: SubscriptionType.EventHandler) -> SubscriptionType {
         let subscription = Subscription(handler: handler)
 
         if options.contains(.Initial) {
