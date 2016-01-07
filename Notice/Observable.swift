@@ -35,7 +35,6 @@ public struct Observable<T> {
 
     public mutating func subscribe(handler: SubscriptionType.EventHandler) -> SubscriptionType {
         let subscription = Subscription(handler: handler)
-        subscription.handler(value)
         subscribers.add(subscription)
         return subscription
     }
