@@ -27,14 +27,3 @@ class Subscriptions<T>: SubscriptionsType {
         subscriptions.forEach { $0.handler(value) }
     }
 }
-
-class OnceSubscriptions<T>: SubscriptionsType {
-    typealias ValueType = T
-
-    var subscriptions = Set<Subscription<ValueType>>()
-
-    func send(value: ValueType) {
-        subscriptions.forEach { $0.handler(value) }
-        subscriptions.removeAll()
-    }
-}
