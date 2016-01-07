@@ -1,5 +1,13 @@
 import Foundation
 
+public struct SubscriptionOptions: OptionSetType {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+
+    public static let New = SubscriptionOptions(rawValue: 1)
+    public static let Initial = SubscriptionOptions(rawValue: 2)
+}
+
 public struct Observable<T> {
 
     // MARK: - Types
@@ -31,8 +39,13 @@ public struct Observable<T> {
 
     private var subscribers = Subscriptions<T>()
 
-    public mutating func subscribe(handler: SubscriptionType.EventHandler) -> SubscriptionType {
+    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: SubscriptionType.EventHandler) -> SubscriptionType {
         let subscription = Subscription(handler: handler)
+
+        if options.contains(.Initial) {
+            subscription.handler(value)
+        }
+        
         subscribers.add(subscription)
         return subscription
     }
