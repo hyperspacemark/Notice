@@ -12,7 +12,8 @@ public struct Observable<T> {
 
     // MARK: - Types
 
-    public typealias SubscriptionType = Subscription<T>
+    public typealias NewEventType = NewEvent<T>
+    public typealias NewOldEventType = NewOldEvent<T>
 
 
     // MARK: - Properties
@@ -22,7 +23,8 @@ public struct Observable<T> {
     public var value: T {
         didSet {
             dispatch_sync(eventQueue) {
-                self.subscribers.send(self.value)
+                self.newSubscribers.send(NewEvent(value: self.value))
+                self.newOldSubscribers.send(NewOldEvent(value: self.value, oldValue: oldValue))
             }
         }
     }
@@ -37,20 +39,36 @@ public struct Observable<T> {
 
     // MARK: - Subscribers
 
-    private var subscribers = Subscriptions<T>()
+    private var newSubscribers = Subscriptions<NewEventType>()
+    private var newOldSubscribers = Subscriptions<NewOldEventType>()
 
-    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: SubscriptionType.EventHandler) -> SubscriptionType {
-        let subscription = Subscription(handler: handler)
+    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: NewEventType.HandlerType) -> Subscription<NewEventType> {
+        let subscriber = Subscription<NewEventType>(handler: handler)
 
         if options.contains(.Initial) {
-            subscription.handler(value)
+            subscriber.handle(NewEvent(value: self.value))
         }
-        
-        subscribers.add(subscription)
-        return subscription
+
+        newSubscribers.add(subscriber)
+        return subscriber
     }
 
-    public mutating func unsubscribe(subscriber: SubscriptionType) {
-        subscribers.remove(subscriber)
+    public mutating func unsubscribe(subscriber: Subscription<NewEventType>) {
+        newSubscribers.remove(subscriber)
+    }
+
+    public mutating func subscribeNewOld(options: SubscriptionOptions = [.New], handler: NewOldEventType.HandlerType) -> Subscription<NewOldEventType> {
+        let subscriber = Subscription<NewOldEventType>(handler: handler)
+
+        if options.contains(.Initial) {
+            subscriber.handle(NewOldEventType(value: self.value))
+        }
+
+        newOldSubscribers.add(subscriber)
+        return subscriber
+    }
+
+    public mutating func unsubscribe(subscriber: Subscription<NewOldEventType>) {
+        newOldSubscribers.remove(subscriber)
     }
 }

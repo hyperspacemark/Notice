@@ -1,29 +1,27 @@
 protocol SubscriptionsType {
-    typealias ValueType
+    typealias EventType: Event
 
-    var subscriptions: Set<Subscription<ValueType>> { get set }
+    var subscriptions: Set<Subscription<EventType>> { get set }
 
-    mutating func add(subscription: Subscription<ValueType>)
-    mutating func remove(subscription: Subscription<ValueType>)
-    func send(value: ValueType)
+    mutating func add(subscription: Subscription<EventType>)
+    mutating func remove(subscription: Subscription<EventType>)
+    func send(value: EventType)
 }
 
 extension SubscriptionsType {
-    mutating func add(subscription: Subscription<ValueType>) {
+    mutating func add(subscription: Subscription<EventType>) {
         subscriptions.insert(subscription)
     }
 
-    mutating func remove(subscription: Subscription<ValueType>) {
+    mutating func remove(subscription: Subscription<EventType>) {
         subscriptions.remove(subscription)
     }
 }
 
-class Subscriptions<T>: SubscriptionsType {
-    typealias ValueType = T
+class Subscriptions<EventType: Event>: SubscriptionsType {
+    var subscriptions = Set<Subscription<EventType>>()
 
-    var subscriptions = Set<Subscription<ValueType>>()
-
-    func send(value: ValueType) {
-        subscriptions.forEach { $0.handler(value) }
+    func send(event: EventType) {
+        subscriptions.forEach { $0.handle(event) }
     }
 }
