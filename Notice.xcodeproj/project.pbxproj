@@ -10,7 +10,6 @@
 		396F33661BB3461F00792AB5 /* Notice.h in Headers */ = {isa = PBXBuildFile; fileRef = 396F33651BB3461F00792AB5 /* Notice.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		396F336E1BB3464300792AB5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396F336D1BB3464300792AB5 /* Observable.swift */; };
 		396F33701BB3468300792AB5 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396F336F1BB3468300792AB5 /* Subscription.swift */; };
-		396F33721BB346C800792AB5 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396F33711BB346C800792AB5 /* Subscriptions.swift */; };
 		62839F6B1C80BD3E0076F99F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62839F6A1C80BD3E0076F99F /* Event.swift */; };
 /* End PBXBuildFile section */
 
@@ -20,7 +19,6 @@
 		396F33671BB3461F00792AB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		396F336D1BB3464300792AB5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		396F336F1BB3468300792AB5 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
-		396F33711BB346C800792AB5 /* Subscriptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscriptions.swift; sourceTree = "<group>"; };
 		62839F6A1C80BD3E0076F99F /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,7 +56,6 @@
 				396F33671BB3461F00792AB5 /* Info.plist */,
 				396F336D1BB3464300792AB5 /* Observable.swift */,
 				396F336F1BB3468300792AB5 /* Subscription.swift */,
-				396F33711BB346C800792AB5 /* Subscriptions.swift */,
 				62839F6A1C80BD3E0076F99F /* Event.swift */,
 			);
 			path = Notice;
@@ -144,7 +141,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62839F6B1C80BD3E0076F99F /* Event.swift in Sources */,
-				396F33721BB346C800792AB5 /* Subscriptions.swift in Sources */,
 				396F33701BB3468300792AB5 /* Subscription.swift in Sources */,
 				396F336E1BB3464300792AB5 /* Observable.swift in Sources */,
 			);
@@ -298,6 +294,7 @@
 				396F336C1BB3461F00792AB5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

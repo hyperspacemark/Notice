@@ -1,29 +1,69 @@
+public struct SubscriptionOptions: OptionSetType {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+
+    public static let New = SubscriptionOptions(rawValue: 1)
+    public static let Initial = SubscriptionOptions(rawValue: 2)
+}
+
 public protocol Event {
     typealias ValueType
-    typealias HandlerType
 
-    var value: ValueType { get }
-    func handle(handler: HandlerType)
+    var subscriptions: Set<Subscription<ValueType -> Void>> { get set }
+    var value: ValueType { get set }
+
+    mutating func subscribe(options: SubscriptionOptions, handler: ValueType -> Void) -> Subscription<ValueType -> Void>
+    mutating func unsubscribe(subscriber: Subscription<ValueType -> Void>)
 }
+
+
+extension Event {
+    public typealias EventHandler = ValueType -> Void
+
+    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: EventHandler) -> Subscription<EventHandler> {
+        let subscription = Subscription<EventHandler>(handler: handler)
+        subscriptions.insert(subscription)
+
+        if options.contains(.Initial) {
+            subscription.handler(value)
+        }
+
+        return subscription
+    }
+
+    public mutating func unsubscribe(subscriber: Subscription<EventHandler>) {
+        subscriptions.remove(subscriber)
+    }
+
+    mutating func invoke(value: ValueType) {
+        self.value = value
+
+        for subscription in subscriptions {
+            subscription.handler(value)
+        }
+    }
+}
+
 
 public struct NewEvent<T>: Event {
-    public let value: T
+    public typealias EventHandler = T -> Void
 
-    public func handle(handler: T -> Void) {
-        handler(value)
+    public var subscriptions = Set<Subscription<EventHandler>>()
+    public var value: T
+
+    public init(value: T) {
+        self.value = value
     }
 }
 
+
 public struct NewOldEvent<T>: Event {
-    public let value: T
-    public let oldValue: T?
+    public typealias EventHandler = (old: T?, new: T) -> Void
 
-    init(value: T, oldValue: T? = nil) {
-        self.value = value
-        self.oldValue = oldValue
-    }
+    public var subscriptions = Set<Subscription<EventHandler>>()
+    public var value: (old: T?, new: T)
 
-    public func handle(handler: (old: T?, new: T) -> Void) {
-        handler(old: oldValue, new: value)
+    public init(value: T) {
+        self.value = (old: nil, new: value)
     }
 }

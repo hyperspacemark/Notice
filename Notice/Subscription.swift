@@ -1,22 +1,16 @@
-public class Subscription<EventType: Event>: Hashable {
-    public typealias EventHandler = EventType.HandlerType
-
-    let handler: EventHandler
+public class Subscription<HandlerType>: Hashable {
+    let handler: HandlerType
     private let UUID = NSUUID().UUIDString
 
-    init(handler: EventHandler) {
+    init(handler: HandlerType) {
         self.handler = handler
     }
 
     public var hashValue: Int {
         return UUID.hashValue
     }
-
-    func handle(event: EventType) {
-        event.handle(handler)
-    }
 }
 
-public func ==<EventType: Event>(lhs: Subscription<EventType>, rhs: Subscription<EventType>) -> Bool {
+public func ==<HandlerType>(lhs: Subscription<HandlerType>, rhs: Subscription<HandlerType>) -> Bool {
     return lhs.UUID == rhs.UUID
 }

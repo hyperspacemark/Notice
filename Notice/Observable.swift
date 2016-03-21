@@ -1,20 +1,6 @@
 import Foundation
 
-public struct SubscriptionOptions: OptionSetType {
-    public let rawValue: Int
-    public init(rawValue: Int) { self.rawValue = rawValue }
-
-    public static let New = SubscriptionOptions(rawValue: 1)
-    public static let Initial = SubscriptionOptions(rawValue: 2)
-}
-
 public struct Observable<T> {
-
-    // MARK: - Types
-
-    public typealias NewEventType = NewEvent<T>
-    public typealias NewOldEventType = NewOldEvent<T>
-
 
     // MARK: - Properties
 
@@ -23,8 +9,8 @@ public struct Observable<T> {
     public var value: T {
         didSet {
             dispatch_sync(eventQueue) {
-                self.newSubscribers.send(NewEvent(value: self.value))
-                self.newOldSubscribers.send(NewOldEvent(value: self.value, oldValue: oldValue))
+                self.new.invoke(self.value)
+                self.newOld.invoke((old: oldValue, new: self.value))
             }
         }
     }
@@ -39,36 +25,11 @@ public struct Observable<T> {
 
     // MARK: - Subscribers
 
-    private var newSubscribers = Subscriptions<NewEventType>()
-    private var newOldSubscribers = Subscriptions<NewOldEventType>()
+    public lazy var new: NewEvent<T> = {
+        return NewEvent<T>(value: self.value)
+    }()
 
-    public mutating func subscribe(options: SubscriptionOptions = [.New], handler: NewEventType.HandlerType) -> Subscription<NewEventType> {
-        let subscriber = Subscription<NewEventType>(handler: handler)
-
-        if options.contains(.Initial) {
-            subscriber.handle(NewEvent(value: self.value))
-        }
-
-        newSubscribers.add(subscriber)
-        return subscriber
-    }
-
-    public mutating func unsubscribe(subscriber: Subscription<NewEventType>) {
-        newSubscribers.remove(subscriber)
-    }
-
-    public mutating func subscribeNewOld(options: SubscriptionOptions = [.New], handler: NewOldEventType.HandlerType) -> Subscription<NewOldEventType> {
-        let subscriber = Subscription<NewOldEventType>(handler: handler)
-
-        if options.contains(.Initial) {
-            subscriber.handle(NewOldEventType(value: self.value))
-        }
-
-        newOldSubscribers.add(subscriber)
-        return subscriber
-    }
-
-    public mutating func unsubscribe(subscriber: Subscription<NewOldEventType>) {
-        newOldSubscribers.remove(subscriber)
-    }
+    public lazy var newOld: NewOldEvent<T> = {
+        return NewOldEvent<T>(value: self.value)
+    }()
 }
