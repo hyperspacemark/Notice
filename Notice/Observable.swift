@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Observable<T> {
+public class Observable<T> {
 
     // MARK: - Properties
 
@@ -9,11 +9,12 @@ public struct Observable<T> {
     public var value: T {
         didSet {
             dispatch_sync(eventQueue) {
-                self.new.invoke(self.value)
-                self.newOld.invoke((old: oldValue, new: self.value))
+                self.invoke(self.value)
             }
         }
     }
+
+    public var subscriptions = Set<Subscription<T -> Void>>()
 
 
     // MARK: - Initialization
@@ -23,13 +24,40 @@ public struct Observable<T> {
     }
 
 
-    // MARK: - Subscribers
+    // MARK: Subscription
 
-    public lazy var new: NewEvent<T> = {
-        return NewEvent<T>(value: self.value)
-    }()
+    public func subscribe(options: SubscriptionOptions = [.New], handler: (T -> Void)) -> Subscription<(T -> Void)> {
+        let subscription = Subscription<(T -> Void)>(handler: handler)
+        subscriptions.insert(subscription)
 
-    public lazy var newOld: NewOldEvent<T> = {
-        return NewOldEvent<T>(value: self.value)
-    }()
+        if options.contains(.Initial) {
+            subscription.handler(value)
+        }
+
+        return subscription
+    }
+
+    public func unsubscribe(subscriber: Subscription<(T -> Void)>) {
+        subscriptions.remove(subscriber)
+    }
+
+    internal func invoke(value: T) {
+        for subscription in subscriptions {
+            subscription.handler(value)
+        }
+    }
+}
+
+extension Observable {
+    public typealias Changeset = (oldValue: T?, newValue: T)
+
+    /// Returns changes of the parent Observable as tuples of old and new values.
+    public func changesets() -> Observable<Changeset> {
+        let observable = Observable<Changeset>(initial: (nil, value))
+        subscribe { value in
+            let changeset: Changeset = (oldValue: observable.value.newValue, newValue: value)
+            observable.value = changeset
+        }
+        return observable
+    }
 }
