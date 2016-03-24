@@ -35,7 +35,7 @@ extension Event {
         subscriptions.remove(subscriber)
     }
 
-    internal mutating func invoke(value: ValueType) {
+    mutating func invoke(value: ValueType) {
         self.value = value
 
         for subscription in subscriptions {

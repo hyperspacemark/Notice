@@ -30,6 +30,35 @@ class EventTests: XCTestCase {
 
         XCTAssertFalse(event.subscriptions.contains(subscription))
     }
+
+    func testNewEventSendsOnlyNewValues() {
+        var event = NewEvent(value: 1)
+
+        let expectation = expectationWithDescription("Event Subscription")
+        event.subscribe { value in
+            XCTAssertEqual(value, 2)
+            expectation.fulfill()
+        }
+
+        event.invoke(2)
+
+        waitForExpectationsWithTimeout(1, handler: nil)
+    }
+
+    func testNewOldEventSendsOldAndNewValues() {
+        var event = NewOldEvent(value: 1)
+
+        let expectation = expectationWithDescription("Event Subscription")
+        event.subscribe { value in
+            XCTAssertEqual(value.old, 1)
+            XCTAssertEqual(value.new, 2)
+            expectation.fulfill()
+        }
+
+        event.invoke((old: 1, new: 2))
+
+        waitForExpectationsWithTimeout(1, handler: nil)
+    }
 }
 
 struct TestEvent: Event {
