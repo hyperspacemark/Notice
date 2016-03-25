@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		26BD51021CA331BC009408FE /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BD51011CA331BC009408FE /* ObservableTests.swift */; };
 		26BD51041CA331BC009408FE /* Notice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 396F33621BB3461F00792AB5 /* Notice.framework */; };
-		26BD510B1CA33ABB009408FE /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BD510A1CA33ABB009408FE /* EventTests.swift */; };
 		396F33661BB3461F00792AB5 /* Notice.h in Headers */ = {isa = PBXBuildFile; fileRef = 396F33651BB3461F00792AB5 /* Notice.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		396F336E1BB3464300792AB5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396F336D1BB3464300792AB5 /* Observable.swift */; };
 		396F33701BB3468300792AB5 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396F336F1BB3468300792AB5 /* Subscription.swift */; };
-		62839F6B1C80BD3E0076F99F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62839F6A1C80BD3E0076F99F /* Event.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,13 +28,11 @@
 		26BD50FF1CA331BC009408FE /* NoticeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoticeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		26BD51011CA331BC009408FE /* ObservableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		26BD51031CA331BC009408FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		26BD510A1CA33ABB009408FE /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		396F33621BB3461F00792AB5 /* Notice.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Notice.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		396F33651BB3461F00792AB5 /* Notice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notice.h; sourceTree = "<group>"; };
 		396F33671BB3461F00792AB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		396F336D1BB3464300792AB5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		396F336F1BB3468300792AB5 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
-		62839F6A1C80BD3E0076F99F /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +59,6 @@
 			children = (
 				26BD51011CA331BC009408FE /* ObservableTests.swift */,
 				26BD51031CA331BC009408FE /* Info.plist */,
-				26BD510A1CA33ABB009408FE /* EventTests.swift */,
 			);
 			path = NoticeTests;
 			sourceTree = "<group>";
@@ -93,7 +88,6 @@
 				396F33671BB3461F00792AB5 /* Info.plist */,
 				396F336D1BB3464300792AB5 /* Observable.swift */,
 				396F336F1BB3468300792AB5 /* Subscription.swift */,
-				62839F6A1C80BD3E0076F99F /* Event.swift */,
 			);
 			path = Notice;
 			sourceTree = "<group>";
@@ -206,7 +200,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26BD510B1CA33ABB009408FE /* EventTests.swift in Sources */,
 				26BD51021CA331BC009408FE /* ObservableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,7 +208,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62839F6B1C80BD3E0076F99F /* Event.swift in Sources */,
 				396F33701BB3468300792AB5 /* Subscription.swift in Sources */,
 				396F336E1BB3464300792AB5 /* Observable.swift in Sources */,
 			);
