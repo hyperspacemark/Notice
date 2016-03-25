@@ -2,6 +2,8 @@ import Foundation
 
 public class Observable<T> {
 
+    public typealias HandlerType = T -> Void
+
     // MARK: - Properties
 
     private let eventQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
@@ -14,7 +16,7 @@ public class Observable<T> {
         }
     }
 
-    public var subscriptions = Set<Subscription<T -> Void>>()
+    public var subscriptions = Set<Subscription<HandlerType>>()
 
 
     // MARK: - Initialization
@@ -26,8 +28,8 @@ public class Observable<T> {
 
     // MARK: Subscription
 
-    public func subscribe(options: SubscriptionOptions = [.New], handler: (T -> Void)) -> Subscription<(T -> Void)> {
-        let subscription = Subscription<(T -> Void)>(handler: handler)
+    public func subscribe(options: SubscriptionOptions = [.New], handler: HandlerType) -> Subscription<HandlerType> {
+        let subscription = Subscription<HandlerType>(handler: handler)
         subscriptions.insert(subscription)
 
         if options.contains(.Initial) {
@@ -37,7 +39,7 @@ public class Observable<T> {
         return subscription
     }
 
-    public func unsubscribe(subscriber: Subscription<(T -> Void)>) {
+    public func unsubscribe(subscriber: Subscription<HandlerType>) {
         subscriptions.remove(subscriber)
     }
 
