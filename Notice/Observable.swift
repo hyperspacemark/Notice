@@ -1,64 +1,62 @@
 import Foundation
 
-public class Observable<T> {
+public final class Observable<Value> {
 
-    public typealias HandlerType = T -> Void
+    // MARK: - Public Properties
 
-    // MARK: - Properties
-
-    private let eventQueue = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
-
-    public var value: T {
+    public var value: Value {
         didSet {
-            dispatch_sync(eventQueue) {
-                self.invoke(self.value)
+            eventQueue.sync {
+                subscriptions.forEach { $0.send(value) }
             }
         }
     }
 
-    public var subscriptions = Set<Subscription<HandlerType>>()
-
 
     // MARK: - Initialization
 
-    public init(initial value: T) {
+    public init(initial value: Value) {
         self.value = value
     }
 
 
-    // MARK: Subscription
+    // MARK: - Public Methods
 
-    public func subscribe(options: SubscriptionOptions = [.New], handler: HandlerType) -> Subscription<HandlerType> {
-        let subscription = Subscription<HandlerType>(handler: handler)
+    @discardableResult
+    public func subscribe(_ options: SubscriptionOptions = [.new], handler: @escaping (Value) -> Void) -> Subscription<Value> {
+        let subscription = Subscription<Value>(send: handler)
         subscriptions.insert(subscription)
 
-        if options.contains(.Initial) {
-            subscription.handler(value)
+        if options.contains(.initial) {
+            subscription.send(value)
         }
 
         return subscription
     }
 
-    public func unsubscribe(subscriber: Subscription<HandlerType>) {
+    public func unsubscribe(_ subscriber: Subscription<Value>) {
         subscriptions.remove(subscriber)
     }
 
-    internal func invoke(value: T) {
-        for subscription in subscriptions {
-            subscription.handler(value)
-        }
-    }
+
+    // MARK: - Internal Properties
+    
+    var subscriptions = Set<Subscription<Value>>()
+
+    
+    // MARK: - Private Properties
+
+    private let eventQueue = DispatchQueue.global(qos: .default)
 }
 
 extension Observable {
-    public typealias Changeset = (oldValue: T?, newValue: T)
+    public typealias Changeset = (old: Value?, new: Value)
 
     /// Returns changes of the parent Observable as tuples of old and new values.
     public func changesets() -> Observable<Changeset> {
-        let observable = Observable<Changeset>(initial: (nil, value))
+        let observable = Observable<Changeset>(initial: (old: nil, new: value))
         subscribe { value in
-            let changeset: Changeset = (oldValue: observable.value.newValue, newValue: value)
-            observable.value = changeset
+            observable.value = (old: observable.value.new, new: value)
         }
         return observable
     }

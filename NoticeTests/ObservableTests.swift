@@ -1,5 +1,5 @@
 import XCTest
-import Notice
+@testable import Notice
 
 class ObservableTests: XCTestCase {
     
@@ -20,7 +20,7 @@ class ObservableTests: XCTestCase {
     func testCallsSubscriptionsOnValueChange() {
         let obs = Observable(initial: 1)
 
-        let expectation = expectationWithDescription("Subscription Observable")
+        let expectation = self.expectation(description: "Subscription Observable")
         obs.subscribe { value in
             XCTAssertEqual(value, 2)
             expectation.fulfill()
@@ -28,15 +28,15 @@ class ObservableTests: XCTestCase {
 
         obs.value = 2
 
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testCallsSubscriptionsWithInitialValueOnChange() {
         let obs = Observable(initial: 1)
 
         var timesCalled = 0
-        let expectation = expectationWithDescription("Subscription Observable")
-        obs.subscribe([.Initial]) { value in
+        let expectation = self.expectation(description: "Subscription Observable")
+        obs.subscribe([.initial]) { value in
             if timesCalled == 0 {
                 XCTAssertEqual(value, 1)
             } else if timesCalled == 1 {
@@ -52,7 +52,7 @@ class ObservableTests: XCTestCase {
 
         obs.value = 2
 
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testSubscribeAddsHandlerToSubscriptions() {
@@ -66,13 +66,13 @@ class ObservableTests: XCTestCase {
     func testSubscribeCallsWithInitialValueIfOptionIncluded() {
         let obs = Observable(initial: 1)
 
-        let expectation = expectationWithDescription("Event Subscription")
-        obs.subscribe([.Initial]) { value in
+        let expectation = self.expectation(description: "Event Subscription")
+        obs.subscribe([.initial]) { value in
             XCTAssertEqual(value, 1)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testUnsubscribeRemovesSubscriberFromSubscriptions() {
@@ -87,15 +87,15 @@ class ObservableTests: XCTestCase {
     func testChangesetObservableSendsOldAndNewValues() {
         let obs = Observable(initial: 1)
 
-        let expectation = expectationWithDescription("Changeset Subscription")
+        let expectation = self.expectation(description: "Changeset Subscription")
         obs.changesets().subscribe { value in
-            XCTAssertEqual(value.oldValue, 1)
-            XCTAssertEqual(value.newValue, 2)
+            XCTAssertEqual(value.old, 1)
+            XCTAssertEqual(value.new, 2)
             expectation.fulfill()
         }
 
         obs.value = 2
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }

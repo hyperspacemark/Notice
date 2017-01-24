@@ -1,24 +1,27 @@
-public struct SubscriptionOptions: OptionSetType {
+import Foundation
+
+public struct SubscriptionOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
 
-    public static let New = SubscriptionOptions(rawValue: 1)
-    public static let Initial = SubscriptionOptions(rawValue: 2)
+    public static let new = SubscriptionOptions(rawValue: 1)
+    public static let initial = SubscriptionOptions(rawValue: 2)
 }
 
-public struct Subscription<HandlerType>: Hashable {
-    let handler: HandlerType
-    private let UUID = NSUUID().UUIDString
+public struct Subscription<Value>: Hashable {
+    let send: (Value) -> Void
+    private let uuid = UUID().uuidString
 
-    init(handler: HandlerType) {
-        self.handler = handler
+    init(send: @escaping (Value) -> Void) {
+        self.send = send
     }
 
     public var hashValue: Int {
-        return UUID.hashValue
+        return uuid.hashValue
+    }
+    
+    public static func ==(lhs: Subscription<Value>, rhs: Subscription<Value>) -> Bool {
+        return lhs.uuid == rhs.uuid
     }
 }
 
-public func ==<HandlerType>(lhs: Subscription<HandlerType>, rhs: Subscription<HandlerType>) -> Bool {
-    return lhs.UUID == rhs.UUID
-}
