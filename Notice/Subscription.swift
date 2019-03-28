@@ -16,8 +16,8 @@ public struct Subscription<Value>: Hashable {
         self.send = send
     }
 
-    public var hashValue: Int {
-        return uuid.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
     }
     
     public static func ==(lhs: Subscription<Value>, rhs: Subscription<Value>) -> Bool {
